@@ -13,10 +13,19 @@ const permission: AppRouteModule = {
     orderNo: 15,
     icon: 'ion:key-outline',
     title: t('routes.demo.permission.permission'),
-    roles: [RoleEnum.SUPER],
   },
 
   children: [
+    {
+      path: 'menu',
+      name: 'PermissionMenu',
+      meta: {
+        title: t('routes.demo.permission.menu'),
+        ignoreKeepAlive: true,
+      },
+      component: () => import('/@/views/permission/index.vue'),
+    },
+
     {
       path: 'front',
       name: 'PermissionFrontDemo',

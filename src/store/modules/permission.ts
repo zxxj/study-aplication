@@ -170,7 +170,6 @@ export const usePermissionStore = defineStore({
 
       // 通过后端下发菜单
       let backRouteList;
-
       // 2.asyncRoutes是所有动态添加的路由表
       const wrapperRouterComponent = (routes) => {
         return routes.map((route) => {
