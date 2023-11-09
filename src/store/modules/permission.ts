@@ -168,8 +168,7 @@ export const usePermissionStore = defineStore({
         return;
       };
 
-      // mr.zhangxinxin: 通过后端下发菜单
-      // 1.定义变量
+      // 通过后端下发菜单
       let backRouteList = [];
 
       // 2.asyncRoutes是所有动态添加的路由表
@@ -229,7 +228,72 @@ export const usePermissionStore = defineStore({
                     }
                 }
             ]
-        }]`,
+        },
+        {
+          "path":"/charts",
+          "name":"Charts",
+          "redirect":"/charts/echarts/map",
+          "meta":{
+              "orderNo":500,
+              "icon":"ion:bar-chart-outline",
+              "title":"routes.demo.charts.charts"
+          },
+          "children":[
+              {
+                  "path":"baiduMap",
+                  "name":"BaiduMap",
+                  "meta":{
+                      "title":"routes.demo.charts.baiduMap"
+                  }
+              },
+              {
+                  "path":"aMap",
+                  "name":"AMap",
+                  "meta":{
+                      "title":"routes.demo.charts.aMap"
+                  }
+              },
+              {
+                  "path":"googleMap",
+                  "name":"GoogleMap",
+                  "meta":{
+                      "title":"routes.demo.charts.googleMap"
+                  }
+              },
+              {
+                  "path":"echarts",
+                  "name":"Echarts",
+                  "meta":{
+                      "title":"Echarts"
+                  },
+                  "redirect":"/charts/echarts/map",
+                  "children":[
+                      {
+                          "path":"map",
+                          "name":"Map",
+                          "meta":{
+                              "title":"routes.demo.charts.map"
+                          }
+                      },
+                      {
+                          "path":"line",
+                          "name":"Line",
+                          "meta":{
+                              "title":"routes.demo.charts.line"
+                          }
+                      },
+                      {
+                          "path":"pie",
+                          "name":"Pie",
+                          "meta":{
+                              "title":"routes.demo.charts.pie"
+                          }
+                      }
+                  ]
+              }
+          ]
+      }
+      ]`,
         );
 
         backRouteList = wrapperRouterComponent(backRouteList);
