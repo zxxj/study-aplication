@@ -17,7 +17,7 @@ import { ERROR_LOG_ROUTE, PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
 import { filter } from '/@/utils/helper/treeHelper';
 
-import { getMenuList } from '/@/api/sys/menu';
+import { getMenuList, getBackMenuList } from '/@/api/sys/menu';
 import { getPermCode } from '/@/api/sys/user';
 
 import { useMessage } from '/@/hooks/web/useMessage';
@@ -169,7 +169,7 @@ export const usePermissionStore = defineStore({
       };
 
       // 通过后端下发菜单
-      let backRouteList = [];
+      let backRouteList;
 
       // 2.asyncRoutes是所有动态添加的路由表
       const wrapperRouterComponent = (routes) => {
@@ -201,104 +201,10 @@ export const usePermissionStore = defineStore({
       };
 
       try {
-        backRouteList = JSON.parse(
-          `[{
-            "path":"/dashboard",
-            "name":"Dashboard",
-            "redirect":"/dashboard/analysis",
-            "meta":{
-                "orderNo":10,
-                "icon":"ion:grid-outline",
-                "title":"routes.dashboard.dashboard"
-            },
-            "children":[
-                {
-                    "path":"analysis",
-                    "name":"Analysis",
-                    "meta":{
-                        "title":"routes.dashboard.analysis"
-                    }
-                },
-                {
-                    "path":"workbench",
-                    "name":"Workbench",
-                    "meta":{
-                        "title":"routes.dashboard.workbench",
-                        "roles": "[\\"super\\"]"
-                    }
-                }
-            ]
-        },
-        {
-          "path":"/charts",
-          "name":"Charts",
-          "redirect":"/charts/echarts/map",
-          "meta":{
-              "orderNo":500,
-              "icon":"ion:bar-chart-outline",
-              "title":"routes.demo.charts.charts"
-          },
-          "children":[
-              {
-                  "path":"baiduMap",
-                  "name":"BaiduMap",
-                  "meta":{
-                      "title":"routes.demo.charts.baiduMap"
-                  }
-              },
-              {
-                  "path":"aMap",
-                  "name":"AMap",
-                  "meta":{
-                      "title":"routes.demo.charts.aMap"
-                  }
-              },
-              {
-                  "path":"googleMap",
-                  "name":"GoogleMap",
-                  "meta":{
-                      "title":"routes.demo.charts.googleMap"
-                  }
-              },
-              {
-                  "path":"echarts",
-                  "name":"Echarts",
-                  "meta":{
-                      "title":"Echarts"
-                  },
-                  "redirect":"/charts/echarts/map",
-                  "children":[
-                      {
-                          "path":"map",
-                          "name":"Map",
-                          "meta":{
-                              "title":"routes.demo.charts.map"
-                          }
-                      },
-                      {
-                          "path":"line",
-                          "name":"Line",
-                          "meta":{
-                              "title":"routes.demo.charts.line"
-                          }
-                      },
-                      {
-                          "path":"pie",
-                          "name":"Pie",
-                          "meta":{
-                              "title":"routes.demo.charts.pie"
-                          }
-                      }
-                  ]
-              }
-          ]
-      }
-      ]`,
-        );
-
+        backRouteList = await getBackMenuList();
+        backRouteList = JSON.parse(backRouteList);
         backRouteList = wrapperRouterComponent(backRouteList);
         backRouteList = parseRouteRoles(backRouteList);
-        console.log(backRouteList);
       } catch (err) {
         console.error(err);
       }
