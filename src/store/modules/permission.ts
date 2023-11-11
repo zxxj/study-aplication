@@ -199,9 +199,51 @@ export const usePermissionStore = defineStore({
         });
       };
 
+      // 将数据库中的菜单转为树形结构
+      const handleBackMenuTree = (menuList) => {
+        const menus = [];
+        menuList.forEach((menu) => {
+          // 处理meta,将meta从json解析为对象
+          try {
+            if (menu.meta) {
+              menu.meta = JSON.parse(menu.meta);
+            }
+          } catch (e) {
+            console.log(e);
+          }
+
+          // 如果pid是0代表没有父级菜单,直接添加到列表中
+          if (menu.pid === 0) {
+            menus.push(menu);
+          } else {
+            // 如果pid不为0代表存在父级菜单,先遍历一遍传入的总菜单并拿着当前的pid找到对应的父级菜单id
+            const parentMenu = menuList.find((m) => m.id === menu.pid);
+
+            // 如果当前的父级菜单没有chidlren则为它创建一个空children数组,为方便添加当前的子菜单
+            if (!parentMenu.children) {
+              parentMenu.children = [];
+            }
+
+            // 如果父级菜单中存在children,直接将子菜单添加到父级的children数组中
+            parentMenu.children.push(menu);
+          }
+        });
+
+        // 返回处理后的树形菜单
+        return menus;
+      };
+
+      // 获取后台菜单列表
+      const backMenuList = () => {
+        // 接口
+        return getBackMenuList().then((res) => {
+          // 处理菜单
+          return handleBackMenuTree(res);
+        });
+      };
+
       try {
-        backRouteList = await getBackMenuList();
-        backRouteList = JSON.parse(backRouteList);
+        backRouteList = await backMenuList();
         backRouteList = wrapperRouterComponent(backRouteList);
         backRouteList = parseRouteRoles(backRouteList);
       } catch (err) {
