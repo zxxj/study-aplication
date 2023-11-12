@@ -40,7 +40,7 @@ export const columns: BasicColumn[] = [
   },
   {
     title: '状态',
-    dataIndex: 'status',
+    dataIndex: 'active',
     width: 80,
     customRender: ({ record }) => {
       const status = record.active;
@@ -117,6 +117,7 @@ export const formSchema: FormSchema[] = [
     field: 'redirect',
     label: '重定向',
     component: 'Input',
+    required: false,
   },
 
   {
@@ -167,7 +168,7 @@ export const formSchema: FormSchema[] = [
   //   ifShow: ({ values }) => !isDir(values.type),
   // },
   {
-    field: 'status',
+    field: 'active',
     label: '状态',
     component: 'RadioButtonGroup',
     defaultValue: '1',

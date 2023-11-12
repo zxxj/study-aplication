@@ -17,7 +17,7 @@
   import { BasicDrawer, useDrawerInner } from '/@/components/Drawer';
 
   import { getMenuList } from '/@/api/demo/system';
-  import { createMenu } from '/@/api/sys/menu';
+  import { createMenu, updateMenu } from '/@/api/sys/menu';
 
   export default defineComponent({
     name: 'MenuDrawer',
@@ -25,6 +25,7 @@
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const isUpdate = ref(true);
+      let menuList; // 保存菜单列表,用于编辑菜单时获取id
 
       const [registerForm, { resetFields, setFieldsValue, updateSchema, validate }] = useForm({
         labelWidth: 100,
@@ -44,6 +45,7 @@
           });
         }
         const treeData = await getMenuList();
+        menuList = treeData;
         updateSchema({
           field: 'parentMenu',
           componentProps: { treeData },
@@ -62,14 +64,21 @@
             delete values.parentMenu;
           } else {
             values.pid = values.parentMenu;
+            delete values.parentMenu;
           }
 
-          if (values.status) {
-            values.active = Number(values.status);
+          if (values.status || values.active) {
+            values.active = Number(values.status) || Number(values.active);
             delete values.status;
           }
 
-          await createMenu(values);
+          if (getTitle.value === '编辑菜单') {
+            const { id } = menuList.find((menu) => menu.name === values.name);
+            values.id = id;
+            await updateMenu(values);
+          } else {
+            await createMenu(values);
+          }
           closeDrawer();
           emit('success');
         } finally {

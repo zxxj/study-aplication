@@ -5,6 +5,7 @@ enum Api {
   GetMenuList = '/getMenuList',
   GetBackActiveMenuList = '/menu/active', // 获取当前可用的菜单
   CreateMenu = '/menu',
+  // UpdateMenu = '/menu',
 }
 
 /**
@@ -21,4 +22,8 @@ export const getBackActiveMenuList = () => {
 
 export const createMenu = (data) => {
   return defHttp.post({ url: Api.CreateMenu, data });
+};
+
+export const updateMenu = (data) => {
+  return defHttp.put({ url: Api.CreateMenu, data });
 };

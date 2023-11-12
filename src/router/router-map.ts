@@ -7,6 +7,7 @@ import { asyncRoutes } from './routes';
 //   Workbench: () => import('/@/views/dashboard/workbench/index.vue'),
 // };
 
+console.log(asyncRoutes, 'aasas');
 const routesList = {};
 export const generateRouteMap = (routes) => {
   return routes.map((route) => {
