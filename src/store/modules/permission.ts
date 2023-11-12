@@ -17,7 +17,7 @@ import { ERROR_LOG_ROUTE, PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
 import { filter } from '/@/utils/helper/treeHelper';
 
-import { getMenuList, getBackMenuList } from '/@/api/sys/menu';
+import { getMenuList, getBackActiveMenuList } from '/@/api/sys/menu';
 import { getPermCode } from '/@/api/sys/user';
 
 import { useMessage } from '/@/hooks/web/useMessage';
@@ -235,9 +235,7 @@ export const usePermissionStore = defineStore({
 
       // 获取后台菜单列表
       const backMenuList = () => {
-        // 接口
-        return getBackMenuList().then((res) => {
-          // 处理菜单
+        return getBackActiveMenuList().then((res) => {
           return handleBackMenuTree(res);
         });
       };

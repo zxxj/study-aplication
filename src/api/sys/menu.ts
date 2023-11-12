@@ -3,7 +3,8 @@ import { getMenuListResultModel } from './model/menuModel';
 
 enum Api {
   GetMenuList = '/getMenuList',
-  GetBackAllMenuList = '/menu',
+  GetBackActiveMenuList = '/menu/active', // 获取当前可用的菜单
+  CreateMenu = '/menu',
 }
 
 /**
@@ -14,6 +15,10 @@ export const getMenuList = () => {
   return defHttp.get<getMenuListResultModel>({ url: Api.GetMenuList });
 };
 
-export const getBackMenuList = () => {
-  return defHttp.get<getMenuListResultModel>({ url: Api.GetBackAllMenuList });
+export const getBackActiveMenuList = () => {
+  return defHttp.get<getMenuListResultModel>({ url: Api.GetBackActiveMenuList });
+};
+
+export const createMenu = (data) => {
+  return defHttp.post({ url: Api.CreateMenu, data });
 };
