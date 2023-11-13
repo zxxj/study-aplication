@@ -18,6 +18,8 @@
 
   import { getMenuList } from '/@/api/demo/system';
   import { createMenu, updateMenu } from '/@/api/sys/menu';
+  import { checkAllChildrenMenuDisable } from '/@/utils/disableMenu';
+  import { useMessage } from '/@/hooks/web/useMessage';
 
   export default defineComponent({
     name: 'MenuDrawer',
@@ -26,6 +28,7 @@
     setup(_, { emit }) {
       const isUpdate = ref(true);
       let menuList; // 保存菜单列表,用于编辑菜单时获取id
+      const { createMessage } = useMessage();
 
       const [registerForm, { resetFields, setFieldsValue, updateSchema, validate }] = useForm({
         labelWidth: 100,
@@ -57,14 +60,12 @@
       async function handleSubmit() {
         try {
           const values = await validate();
-          console.log(values);
           setDrawerProps({ confirmLoading: true });
           // TODO custom api
           if (!values.parentMenu) {
             delete values.parentMenu;
           } else {
             values.pid = values.parentMenu;
-            delete values.parentMenu;
           }
 
           if (values.status || values.active) {
@@ -75,7 +76,13 @@
           if (getTitle.value === '编辑菜单') {
             const { id } = menuList.find((menu) => menu.name === values.name);
             values.id = id;
-            await updateMenu(values);
+            const res = checkAllChildrenMenuDisable(menuList, values);
+
+            if (res) {
+              await updateMenu(values);
+            } else {
+              createMessage.error('先禁用所有子菜单后才能禁用父菜单');
+            }
           } else {
             await createMenu(values);
           }
